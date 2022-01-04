@@ -1,37 +1,17 @@
 <view class="page">
+    <view class="shifang-header">
+        <img src="https://static-1253442168.file.myqcloud.com/xupload/20210325_shifangLogo.png" />
+        <h3>十方教育 AI Lab 提供技术支持💪</h3>
+    </view>
     <view class="page__bd">
         <!-- Face Detecting -->
         <view class="weui-panel">
-            <view class="weui-panel__hd">Face Detecting</view>
             <view class="weui-panel__bd">
                 <view class="weui-media-box weui-media-box_text">
-                    <view class="weui-media-box__desc">This is a face detecting demo using face-api.js. Face-api.js is based on TensorflowJS.</view>
+                    <view class="weui-media-box__desc">基于face-api.js(TensorflowJS)的人脸特征识别demo.</view>
                     <view class="weui-media-box__info">
                         <navigator url="/package_face_detecting/pages/camera/camera" class="marginTop10">
-                            <button class="weui-btn" type="primary">Access a camera</button>
-                        </navigator>
-
-                        <navigator url="/package_face_detecting/pages/photo/photo" class="marginTop10">
-                            <button class="weui-btn">Take a photo</button>
-                        </navigator>
-                    </view>
-                </view>
-            </view>
-        </view>
-
-        <!-- Face Recognition -->
-        <view class="weui-panel">
-            <view class="weui-panel__hd">Face Recognition</view>
-            <view class="weui-panel__bd">
-                <view class="weui-media-box weui-media-box_text">
-                    <view class="weui-media-box__desc">This is a face recognition demo using face-api.js.</view>
-                    <view class="weui-media-box__info">
-                        <navigator url="/package_face_recognition/pages/camera/camera" class="marginTop10">
-                            <button class="weui-btn" type="primary">Access a camera</button>
-                        </navigator>
-
-                        <navigator url="/package_face_recognition/pages/photo/photo" class="marginTop10">
-                            <button class="weui-btn">Take a photo</button>
+                            <button class="weui-btn" type="primary">开启摄像头</button>
                         </navigator>
                     </view>
                 </view>

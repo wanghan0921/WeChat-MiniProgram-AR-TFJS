@@ -1,98 +1,66 @@
-const recognition = require('../../utils/recognitionBusiness.js')
-const canvasId = 'canvas1';
-const speedMaxCount = 60;
-const isReserveDraw = false;
-const isDrawOther = true;
-// camera listener
-var listener = null;
-
+// package_face_recognition/pages/camera/camera.js
 Page({
-    data: {
-        devicePosition: 'front',
-        cameraStyle: 'camera_Android',
-    },
-    onReady() {
-        var _that = this;
-        // set cameraStyle of camera by system platform
-        wx.getSystemInfo({
-            success(res) {
-                console.log(res.system);
-                if (res.system.indexOf('iOS') !== -1) {
-                    _that.setData({
-                        cameraStyle: 'camera_iOS',
-                    });
-                }
-            }
-        })
-    },
-    async onLoad() {
-        var _that = this;
-        wx.showLoading({
-            title: 'Loading...',
-        });
-        await recognition.loadmodel(canvasId, isReserveDraw);
-        wx.hideLoading();
-        wx.showLoading({
-            title: 'Warming Up...',
-        });
-        await recognition.warmup();
-        wx.hideLoading();
-        _that.startTacking();
-        await recognition.getReferenceImage();
-    },
-    onUnload: function () {
-        this.stopTacking();
-        console.log('onUnload', 'listener is stop');
-    },
-    startTacking() {
-        var _that = this;
-        var count = 0;
-        const context = wx.createCameraContext();
 
-        if (!context.onCameraFrame) {
-            var message = 'Does not support the new api "Camera.onCameraFrame".';
-            console.log(message);
-            wx.showToast({
-                title: message,
-                icon: 'none'
-            });
-            return;
-        }
+  /**
+   * 页面的初始数据
+   */
+  data: {
 
-        // real-time
-        listener = context.onCameraFrame(async function (res) {
-            if (count < speedMaxCount) {
-                count++;
-                return;
-            }
-            count = 0;
-            console.log('onCameraFrame:', res.width, res.height);
-            const frame = {
-                data: new Uint8ClampedArray(res.data),
-                width: res.width,
-                height: res.height,
-            };
-            // process
-            await recognition.detect(frame, isDrawOther);
-        });
-        // start
-        listener.start();
-        console.log('startTacking', 'listener is start');
-    },
-    stopTacking() {
-        if (listener) {
-            listener.stop();
-        }
-    },
-    changeDirection() {
-        var status = this.data.devicePosition;
-        if (status === 'back') {
-            status = 'front';
-        } else {
-            status = 'back';
-        }
-        this.setData({
-            devicePosition: status,
-        });
-    }
+  },
+
+  /**
+   * 生命周期函数--监听页面加载
+   */
+  onLoad: function (options) {
+
+  },
+
+  /**
+   * 生命周期函数--监听页面初次渲染完成
+   */
+  onReady: function () {
+
+  },
+
+  /**
+   * 生命周期函数--监听页面显示
+   */
+  onShow: function () {
+
+  },
+
+  /**
+   * 生命周期函数--监听页面隐藏
+   */
+  onHide: function () {
+
+  },
+
+  /**
+   * 生命周期函数--监听页面卸载
+   */
+  onUnload: function () {
+
+  },
+
+  /**
+   * 页面相关事件处理函数--监听用户下拉动作
+   */
+  onPullDownRefresh: function () {
+
+  },
+
+  /**
+   * 页面上拉触底事件的处理函数
+   */
+  onReachBottom: function () {
+
+  },
+
+  /**
+   * 用户点击右上角分享
+   */
+  onShareAppMessage: function () {
+
+  }
 })

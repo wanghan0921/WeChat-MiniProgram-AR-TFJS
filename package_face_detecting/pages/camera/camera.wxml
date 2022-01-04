@@ -1,4 +1,8 @@
 <view class="page">
+  <view class="shifang-header">
+        <img src="https://static-1253442168.file.myqcloud.com/xupload/20210325_shifangLogo.png" />
+        <h3>十方教育 AI Lab 提供技术支持💪</h3>
+    </view>
     <view>
       <camera 
         device-position="{{devicePosition}}" 
@@ -13,7 +17,9 @@
       </camera>
       <canvas canvas-id="hiddenCanvas" class="hiddenCanvas">
       </canvas>
-      <button type="default" bindtap="changeDirection" class="marginTop10">change camera direction</button>
+      <view style="text-align: center;margin: 20px 0;">嘴型评估: {{mouthStatus}}</view>
+      <view style="text-align: center;margin: 20px 0;">情感评估: {{expressions}}</view>
+      <button type="default" bindtap="changeDirection" class="marginTop10">切换摄像头</button>
     </view>
     <view class="page__bd page__bd_spacing">
     </view>

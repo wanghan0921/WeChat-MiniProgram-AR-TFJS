@@ -28,5 +28,10 @@ App({
       canvas: wx.createOffscreenCanvas()
     },
       ENABLE_DEBUG);
+    wx.cloud.init({
+      env: 'cloud1-9gn0fti4c708fb57',
+      traceUser: true
+    })
+    console.log(wx.cloud)
   }
 })

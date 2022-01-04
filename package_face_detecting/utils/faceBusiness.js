@@ -6,8 +6,9 @@ const inputSize = 288;
 const scoreThreshold = 0.45;
 const useTinyModel = true;
 // your website url
-const modelUrl = 'https://sanyuered.github.io/models/';
-// const modelUrl = 'http://127.0.0.1/models/';
+// const modelUrlFaceDetector = 'https://github.com/justadudewhohacks/face-api.js/tree/master/weights/';
+// const modelFaceExpressionModelUrl = 'cloud://636c-cloud1-9gn0fti4c708fb57-1307318900/models';
+// const modelUrl = 'https://sanyuered.github.io/models/';
 // decoration image for image tracker 
 const decorationImageUrl = '../../../cat_beard.png';
 // hidden canvas
@@ -47,10 +48,7 @@ function createBrowserEnv() {
 }
 
 function getFaceDetectorOptions() {
-  return new faceapi.TinyFaceDetectorOptions({
-    inputSize,
-    scoreThreshold
-  })
+  return new faceapi.TinyFaceDetectorOptions()
 }
 
 async function loadmodel(_canvasId,
@@ -65,27 +63,92 @@ async function loadmodel(_canvasId,
   };
   options = getFaceDetectorOptions();
   console.log('options', options);
-  await faceapi.loadTinyFaceDetectorModel(modelUrl);
-  await faceapi.loadFaceLandmarkTinyModel(modelUrl);
+
+  const result = await wx.cloud.getTempFileURL({
+    fileList: [{ fileID: 'cloud://cloud1-9gn0fti4c708fb57.636c-cloud1-9gn0fti4c708fb57-1307318900/models/face_expression_model-shard1' }],
+  })
+  const { fileList } = result
+  const url = fileList[0].tempFileURL.split('/models')[0] + '/models'
+  await faceapi.loadFaceLandmarkTinyModel(url);
+  await faceapi.loadFaceExpressionModel(url);
+  await faceapi.loadTinyFaceDetectorModel(url);
+
+
   console.log('model is loaded.');
+}
+
+function getFrameSliceOptions(frameWidth, frameHeight, displayWidth, displayHeight) {
+  let result = {
+    start: [0, 0, 0],
+    size: [-1, -1, 3]
+  };
+
+  const ratio = displayHeight / displayWidth;
+
+  if (ratio > frameHeight / frameWidth) {
+    result.start = [0, Math.ceil((frameWidth - Math.ceil(frameHeight / ratio)) / 2), 0];
+    result.size = [-1, Math.ceil(frameHeight / ratio), 3];
+  } else {
+    result.start = [Math.ceil((frameHeight - Math.floor(ratio * frameWidth)) / 2), 0, 0];
+    result.size = [Math.ceil(ratio * frameWidth), -1, 3];
+  }
+
+  return result;
+}
+
+function versionStringCompare(preVersion = '', lastVersion = '') {
+  var sources = preVersion.split('.');
+  var dests = lastVersion.split('.');
+  var maxL = Math.max(sources.length, dests.length);
+  var result = 0;
+  for (let i = 0; i < maxL; i++) {
+    let preValue = sources.length > i ? sources[i] : 0;
+    let preNum = isNaN(Number(preValue)) ? preValue.charCodeAt() : Number(preValue);
+    let lastValue = dests.length > i ? dests[i] : 0;
+    let lastNum = isNaN(Number(lastValue)) ? lastValue.charCodeAt() : Number(lastValue);
+    if (preNum < lastNum) {
+      result = -1;
+      break;
+    } else if (preNum > lastNum) {
+      result = 1;
+      break;
+    }
+  }
+  return result;
 }
 
 async function detect(frame,
   isWithFaceLandmarks,
   _canvasWidth,
   _canvasHeight,
-  photoPath) {
+  photoPath,
+  system) {
   canvasWidth = _canvasWidth;
   canvasHeight = _canvasHeight;
   tempImagePath = photoPath;
-
   var start = new Date();
-  // detect
-  const tempTensor = faceapi.tf.tensor(new Uint8Array(frame.data), [frame.height, frame.width, 4]);
-  const inputImgElTensor = tempTensor.slice([0, 0, 0], [-1, -1, 3]);
+  if (versionStringCompare(system, '14.5') === 1) {
+    var tempTensor
+    var inputImgElTensor = faceapi.tf.tidy(() => {
+      const imgData = {
+        data: new Uint8Array(frame.data),
+        width: frame.width,
+        height: frame.height
+      }
+      tempTensor = faceapi.tf.browser.fromPixels(imgData, 4)
+      const sliceOptions = getFrameSliceOptions(frame.width, frame.height, canvas1.width, canvas1.height)
+      return tempTensor.slice(sliceOptions.start, sliceOptions.size).resizeBilinear([canvas1.width, canvas1.height])
+    })
+  } else {
+    var tempTensor = faceapi.tf.tensor(new Uint8Array(frame.data), [frame.height, frame.width, 4]);
+    var inputImgElTensor = tempTensor.slice([0, 0, 0], [-1, -1, 3]);
+  }
+
   var detectResults = [];
+  var detectResults2 = [];
   if (isWithFaceLandmarks) {
-    detectResults = await faceapi.detectAllFaces(inputImgElTensor, options).withFaceLandmarks(useTinyModel);
+    detectResults2 = await faceapi.detectAllFaces(inputImgElTensor, options).withFaceExpressions()
+    detectResults = await faceapi.detectAllFaces(inputImgElTensor, options).withFaceLandmarks(useTinyModel)
   } else {
     detectResults = await faceapi.detectAllFaces(inputImgElTensor, options);
   }
@@ -95,25 +158,19 @@ async function detect(frame,
   // statistics
   var end1 = new Date();
   console.log("detect time", end1 - start, 'ms');
-  console.log("detect result", detectResults);
+  console.log("detect result", detectResults, detectResults2);
   faceapi.matchDimensions(canvas1, frame);
+
   const resizedResults = faceapi.resizeResults(detectResults, frame);
-  // draw rect
-  faceapi.draw.drawDetections(canvas1, resizedResults);
-  // draw landmarks
+
   if (isWithFaceLandmarks) {
     faceapi.draw.drawFaceLandmarks(canvas1, resizedResults);
-    /*
-    if (resizedResults && resizedResults.length > 0) {
-      const ctx = wx.createCanvasContext(canvasId);
-      drawFaceDecoration(resizedResults[0].landmarks._positions, ctx);
-    }
-    */
+
   }
   var end2 = new Date();
   console.log("draw time", end2 - end1, 'ms');
 
-  return detectResults;
+  return { detectResults, detectResults2 };
 }
 
 async function warmup() {
@@ -123,175 +180,6 @@ async function warmup() {
   // memory management: dispose
   faceapi.tf.dispose(frame);
   console.log('warm up model');
-}
-
-function drawImageOnUI(transformData,
-  canvasWidth,
-  canvasHeight,
-  ctx) {
-  //const hiddenCtx = wx.createCanvasContext(hiddenCanvasId);
-  const hiddenCtx = wx.createCanvasContext(hiddenCanvasId);
-  // avoid to get hidden images existed
-  const offsetLeft = canvasWidth;
-  hiddenCtx.drawImage(decorationImageUrl, 0, 0, canvasWidth, canvasHeight);
-  console.log('size of decoration image', canvasWidth, canvasHeight);
-  hiddenCtx.draw(false, function () {
-    // get image data of srcImage
-    wx.canvasGetImageData({
-      canvasId: hiddenCanvasId,
-      x: 0,
-      y: 0,
-      width: canvasWidth,
-      height: canvasHeight,
-      success(srcImage) {
-        // create a image data of destImage
-        wx.canvasGetImageData({
-          canvasId: hiddenCanvasId,
-          x: offsetLeft,
-          y: 0,
-          width: canvasWidth,
-          height: canvasHeight,
-          success(destImage) {
-            console.log('transformData', transformData);
-
-            // invert the transform for function "warp_perspective_color" 
-            custom.invert_transform({ data: transformData });
-            // warp perspective
-            custom.warp_perspective_color(
-              srcImage,
-              destImage,
-              transformData);
-            var itemData = destImage.data;
-            // convert from black to transparent.
-            for (var i = 0; i < itemData.length; i = i + 4) {
-              if (itemData[i] === 0 &&
-                itemData[i + 1] === 0 &&
-                itemData[i + 2] === 0 &&
-                itemData[i + 3] !== 0) {
-                itemData[i + 3] = 0;
-              }
-            }
-            // "take a photo" mode
-            if (tempImagePath) {
-              // put image data
-              wx.canvasPutImageData({
-                canvasId: hiddenCanvasId,
-                x: offsetLeft,
-                y: 0,
-                width: canvasWidth,
-                height: canvasHeight,
-                data: itemData,
-                success(res) {
-                  // When function "wx.canvasToTempFilePath" is called frequently on Android Wechat, WeChat will be crashed.
-                  // get image file path
-                  wx.canvasToTempFilePath({
-                    x: offsetLeft,
-                    y: 0,
-                    width: canvasWidth,
-                    height: canvasHeight,
-                    destWidth: canvasWidth,
-                    destHeight: canvasHeight,
-                    canvasId: hiddenCanvasId,
-                    success(res2) {
-                      // draw image
-                      ctx.drawImage(res2.tempFilePath, 0, 0, canvasWidth, canvasHeight);
-                      ctx.draw(isReserveDraw);
-                      console.log('drawImageOnUI', 'completed');
-                    }
-                  });
-                },
-                fail(errorMsg) {
-                  console.log('drawImageOnUI', errorMsg);
-                }
-              });
-
-            } else {
-              // put image data
-              wx.canvasPutImageData({
-                canvasId: canvasId,
-                x: 0,
-                y: 0,
-                width: canvasWidth,
-                height: canvasHeight,
-                data: itemData,
-                success(res) {
-                  console.log('drawImageOnUI', 'completed');
-                },
-                fail(errorMsg) {
-                  console.log('drawImageOnUI', errorMsg);
-                }
-              });
-            }
-          }
-        });
-      },
-      fail(errorMsg) {
-        console.log('canvasGetImageData', errorMsg);
-      },
-    });
-  });
-}
-
-function drawFaceDecoration(landmarks, ctx) {
-  var srcPoints = [];
-  var destPoints = [];
-  // The number 375 means picture "cat_beard.png" width and height.
-  console.log('drawFaceDecoration', canvasWidth, canvasHeight);
-  var widthRatio = canvasWidth / 375;
-  var heightRatio = canvasHeight / 375;
-  // The following are 4 source points.
-  // The picture width is 375 and height is 375.
-  // left eye
-  srcPoints.push({
-    x: 150.2587 * widthRatio,
-    y: 135.3529 * heightRatio,
-  });
-  // right eye
-  srcPoints.push({
-    x: 230.2213 * widthRatio,
-    y: 137.1662 * heightRatio,
-  });
-  // left side of mouth
-  srcPoints.push({
-    x: 153.8815 * widthRatio,
-    y: 225.9835 * heightRatio,
-  });
-  // right side of mouth
-  srcPoints.push({
-    x: 173.5974 * widthRatio,
-    y: 225.8535 * heightRatio,
-  });
-  // The following are 4 destion points.
-  // The point index 38, 44, 48 and 67 are index of feature points on the face.
-  destPoints.push({
-    x: landmarks[38]._x,
-    y: landmarks[38]._y,
-  });
-  destPoints.push({
-    x: landmarks[44]._x,
-    y: landmarks[44]._y,
-  });
-  destPoints.push({
-    x: landmarks[48]._x,
-    y: landmarks[48]._y,
-  });
-  destPoints.push({
-    x: landmarks[67]._x,
-    y: landmarks[67]._y,
-  });
-
-  // get transform from source to destion
-  var transformData = custom.perspective_transform(
-    srcPoints[0].x, srcPoints[0].y, destPoints[0].x, destPoints[0].y,
-    srcPoints[1].x, srcPoints[1].y, destPoints[1].x, destPoints[1].y,
-    srcPoints[2].x, srcPoints[2].y, destPoints[2].x, destPoints[2].y,
-    srcPoints[3].x, srcPoints[3].y, destPoints[3].x, destPoints[3].y,
-  );
-
-  //draw image on UI
-  drawImageOnUI(transformData.data,
-    canvasWidth,
-    canvasHeight, ctx);
 }
 
 var custom = {};
@@ -333,7 +221,7 @@ custom.warp_perspective_color = function (src, dst, transform) {
     xs0 = m01 * i + m02,
       ys0 = m11 * i + m12,
       ws = m21 * i + m22;
-    for (var j = 0; j < dst_width; j++ , dptr += 4, xs0 += m00, ys0 += m10, ws += m20) {
+    for (var j = 0; j < dst_width; j++, dptr += 4, xs0 += m00, ys0 += m10, ws += m20) {
       sc = 1.0 / ws;
       xs = xs0 * sc, ys = ys0 * sc;
       ixs = xs | 0, iys = ys | 0;

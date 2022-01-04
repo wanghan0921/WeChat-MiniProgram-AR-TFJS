@@ -28,3 +28,14 @@
     width:1000px;
     height:1000px;
 }
+
+.shifang-header {
+    text-align: center;
+    padding: 20px;
+    color: #e5b13c;
+    background-color: #50b8e0;
+  }
+
+  .shifang-header img {
+    height: 80px
+  }

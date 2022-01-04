@@ -56,17 +56,17 @@ Page({
     });
   },
   takePhoto() {
-    var _that = this;
-    var photoPath = '../../../people.jpg';
-    //get size of image 
-    wx.getImageInfo({
-      src: photoPath,
-      success(res) {
-        console.log('size of image:', res.width, res.height);
-        _that.processPhoto(photoPath, res.width, res.height);
-      }
-    });
-    return;
+    // var _that = this;
+    // var photoPath = '../../../people.jpg';
+    // //get size of image 
+    // wx.getImageInfo({
+    //   src: photoPath,
+    //   success(res) {
+    //     console.log('size of image:', res.width, res.height);
+    //     _that.processPhoto(photoPath, res.width, res.height);
+    //   }
+    // });
+    // return;
 
     var _that = this;
     const context = wx.createCameraContext();
@@ -89,7 +89,8 @@ Page({
               _that.processPhoto(photoPath, res.width, res.height);
             }
           });
-        }
+        },
+        fail: err => console.log(err)
       });
     }
     else {
