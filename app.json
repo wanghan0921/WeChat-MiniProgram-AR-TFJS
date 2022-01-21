@@ -11,17 +11,16 @@
       ]
     },
     {
-      "root": "package_face_recognition",
+      "root": "package_recoder_detecting",
       "pages": [
-        "pages/camera/camera",
-        "pages/photo/photo"
+        "pages/recorder/recorder"
       ]
     }
   ],
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "Miniprogram AR",
+    "navigationBarTitleText": "AI Lab",
     "navigationBarTextStyle": "black"
   },
   "sitemapLocation": "sitemap.json"

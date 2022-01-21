@@ -13,7 +13,7 @@
     ]
   },
   "setting": {
-    "urlCheck": true,
+    "urlCheck": false,
     "es6": true,
     "enhance": true,
     "postcss": true,
@@ -46,14 +46,14 @@
     "packNpmRelationList": [],
     "minifyWXSS": true,
     "disableUseStrict": false,
-    "minifyWXML": true,
     "showES6CompileOption": false,
-    "useCompilerPlugins": false
+    "useCompilerPlugins": false,
+    "minifyWXML": true
   },
   "compileType": "miniprogram",
   "libVersion": "2.8.0",
   "appid": "wx45712048fbe0e90b",
-  "projectname": "red_sanyue_wechat_ar_tfjs",
+  "projectname": "demo",
   "debugOptions": {
     "hidedInDevtools": []
   },

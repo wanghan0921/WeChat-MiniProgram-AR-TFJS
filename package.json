@@ -11,6 +11,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "abab": "^2.0.0",
+    "crypto-js": "^4.1.1",
     "fetch-wechat": "0.0.3"
   }
 }

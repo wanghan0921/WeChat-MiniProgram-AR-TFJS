@@ -1,0 +1,66 @@
+.page__bd {
+  padding-bottom: 0;
+}
+
+.shifang-header {
+  text-align: center;
+  padding: 20px;
+  color: #e5b13c;
+  background-color: #50b8e0;
+}
+
+.shifang-header img {
+  height: 80px
+}
+
+.recorder_time {
+  height: 68rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24rpx;
+  font-family: PingFangSC, PingFangSC-Regular;
+  font-weight: 400;
+  text-align: center;
+  color: #41414d;
+  line-height: 34rpx;
+  width: 100%;
+}
+
+.red_point {
+  width: 10rpx;
+  height: 10rpx;
+  border-radius: 50%;
+  background: #ff481c;
+  display: inline-block;
+  margin-right: 10rpx;
+  animation: flicker 1s infinite;
+}
+
+@keyframes flicker {
+  0% {
+    opacity: 0;
+    filter: alpha(opacity=0)
+  }
+
+  100% {
+    opacity: 1;
+    filter: alpha(opacity=100)
+  }
+}
+
+.desc {
+  color: #999;
+  font-size: 13px;
+  line-height: 1.2;
+}
+
+.text-result {
+  box-sizing: border-box;
+  width: 100%;
+  margin-top: 15px;
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #999;
+  font-size: 13px;
+}

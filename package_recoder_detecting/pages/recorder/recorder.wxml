@@ -1,0 +1,44 @@
+<wxs module="fn">
+  module.exports = {
+    formatSeconds: function (value) {
+      var secondTime = parseInt(value); // 秒
+      var minuteTime = 0; // 分
+      var hourTime = 0; // 小时
+      if (secondTime >= 60) {
+        minuteTime = parseInt(secondTime / 60);
+        secondTime = parseInt(secondTime % 60);
+        if (minuteTime >= 60) {
+          hourTime = parseInt(minuteTime / 60);
+          minuteTime = parseInt(minuteTime % 60);
+        }
+      }
+      var min = +minuteTime < 10 ? '0' + minuteTime : minuteTime
+      var sec = +secondTime < 10 ? '0' + secondTime : secondTime
+      return min + ':' + sec;
+    }
+  }
+</wxs>
+<view class="page">
+  <view class="shifang-header">
+    <img src="https://static-1253442168.file.myqcloud.com/xupload/20210325_shifangLogo.png" />
+    <h3>十方教育 AI Lab 提供技术支持💪</h3>
+  </view>
+  <view class="recorder_time">
+    <text wx:if="{{isRecording}}" class="red_point"></text>
+    {{isRecording? '正在录制' : ''}} {{ fn.formatSeconds(recordingTime)}} / 1:00
+  </view>
+
+  <view style="background-color: #e5e5e5;margin-top: 20px;padding: 15px;">
+    <view class="desc" style="font-weight: bolder;margin-bottom: 4px;">示例文稿:</view>
+    <view class="desc">我希望有个如你一般的人，如山间清爽的风，如古城温暖的光，从清晨到夜晚，由山野到书房，只要最后是你，就好。世事如书，我偏爱你这一句，愿做个逗号，待在你脚边。但你有自己的朗读者，而我只是个摆渡人，您好，早安。（您的名字）在（您的城市），向您问好！</view>
+  </view>
+
+  <view style="padding: 15px;">
+    <button class="weui-btn" type="primary" bindtap="_connectWS">开启识别</button>
+
+  </view>
+
+  <view style="padding: 15px;">
+    <textarea value="{{resultText}}" placeholder="识别内容" disabled focus class="text-result"></textarea>
+  </view>
+</view>

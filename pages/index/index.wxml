@@ -17,5 +17,17 @@
                 </view>
             </view>
         </view>
+        <view class="weui-panel">
+            <view class="weui-panel__bd">
+                <view class="weui-media-box weui-media-box_text">
+                    <view class="weui-media-box__desc">基于科大讯飞AI-语音听写(流式版)WebAPI实现demo.</view>
+                    <view class="weui-media-box__info">
+                        <navigator url="/package_recoder_detecting/pages/recorder/recorder" class="marginTop10">
+                            <button class="weui-btn" type="primary">开启录音</button>
+                        </navigator>
+                    </view>
+                </view>
+            </view>
+        </view>
     </view>
 </view>
