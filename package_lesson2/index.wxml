@@ -1,0 +1,25 @@
+<view class="page">
+    <view class="page__bd">
+        <view class="weui-panel">
+            
+            <view class="weui-panel__bd">
+                <view class="weui-panel__hd">图像1</view>
+                <image src="{{sampleImage1Url}}" mode="aspectFit" class="inputImage"></image>
+                <view class="weui-panel__hd">图像2</view>
+                <image src="{{sampleImage2Url}}" mode="aspectFit" class="inputImage"></image>
+                <!-- canvas v2-->
+                <!-- <canvas id="canvas1" type="2d" class="visibleCanvas" 
+                    style="width:{{canvas1Width}}px;height:{{canvas1Height}}px;"></canvas>
+                    <canvas id="canvas2" type="2d" class="visibleCanvas" 
+                    style="width:{{canvas1Width}}px;height:{{canvas1Height}}px;"></canvas> -->
+                <view style="background-color: #e5e5e5;margin-top: 20px;padding: 15px;">
+                    <view class="desc" style="font-weight: bolder;margin-bottom: 4px;">对比结果:</view>
+                    <view class="desc">{{result}}</view>
+                </view>
+                <view class="weui-media-box">
+                    <button bindtap="btnRun2" class="marginTop10" type="primary">对比</button>
+                </view>
+            </view>
+        </view>
+    </view>
+</view>

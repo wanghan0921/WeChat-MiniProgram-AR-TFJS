@@ -15,6 +15,12 @@
       "pages": [
         "pages/recorder/recorder"
       ]
+    },
+    {
+      "root": "package_lesson2",
+      "pages": [
+        "index"
+      ]
     }
   ],
   "window": {

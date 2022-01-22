@@ -1,5 +1,5 @@
 {
-  "description": "WeChat MiniProgram AR with Tensorflow",
+  "description": "project config file",
   "packOptions": {
     "ignore": [
       {
@@ -14,11 +14,11 @@
   },
   "setting": {
     "urlCheck": false,
-    "es6": true,
-    "enhance": true,
-    "postcss": true,
+    "es6": false,
+    "enhance": false,
+    "postcss": false,
     "preloadBackgroundData": false,
-    "minified": true,
+    "minified": false,
     "newFeature": true,
     "coverView": true,
     "nodeModules": true,
@@ -44,16 +44,16 @@
     "userConfirmedBundleSwitch": false,
     "packNpmManually": false,
     "packNpmRelationList": [],
-    "minifyWXSS": true,
+    "minifyWXSS": false,
     "disableUseStrict": false,
+    "minifyWXML": false,
     "showES6CompileOption": false,
-    "useCompilerPlugins": false,
-    "minifyWXML": true
+    "useCompilerPlugins": false
   },
   "compileType": "miniprogram",
-  "libVersion": "2.8.0",
+  "libVersion": "2.16.1",
   "appid": "wx45712048fbe0e90b",
-  "projectname": "demo",
+  "projectname": "WeChat-WebAR",
   "debugOptions": {
     "hidedInDevtools": []
   },

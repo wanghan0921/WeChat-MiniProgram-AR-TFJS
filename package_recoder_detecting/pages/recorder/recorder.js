@@ -1,6 +1,6 @@
 // package_recoder_detecting/pages/recorder/recorder.js
-import CryptoJS from 'crypto-js'
-import { weBtoa, weAtob } from '../../utils/decode'
+// import CryptoJS from 'crypto-js'
+// import { weBtoa } from '../../utils/decode'
 
 const APPID = '46ee41d6'
 const API_SECRET = 'Y2NiYWU5ODRiMjg2YWIxNzE2MjdlNWU2'

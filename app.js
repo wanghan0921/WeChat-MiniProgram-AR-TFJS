@@ -15,23 +15,23 @@
  * =============================================================================
  */
 
-const fetchWechat = require('fetch-wechat');
-const plugin = require('./utils/plugin_config.js');
-const faceapi = require('./utils/face-api.js');
-const ENABLE_DEBUG = false;
+// const fetchWechat = require('fetch-wechat');
+// const plugin = require('./utils/plugin_config.js');
+// const faceapi = require('./utils/face-api.js');
+// const ENABLE_DEBUG = false;
 //app.js
 App({
   onLaunch: function () {
-    plugin.configPlugin({
-      fetchFunc: fetchWechat.fetchFunc(),
-      tf: faceapi.tf,
-      canvas: wx.createOffscreenCanvas()
-    },
-      ENABLE_DEBUG);
-    wx.cloud.init({
-      env: 'cloud1-9gn0fti4c708fb57',
-      traceUser: true
-    })
-    console.log(wx.cloud)
+    // plugin.configPlugin({
+    //   fetchFunc: fetchWechat.fetchFunc(),
+    //   tf: faceapi.tf,
+    //   canvas: wx.createOffscreenCanvas()
+    // },
+    //   ENABLE_DEBUG);
+    // wx.cloud.init({
+    //   env: 'cloud1-9gn0fti4c708fb57',
+    //   traceUser: true
+    // })
+    // console.log(wx.cloud)
   }
 })

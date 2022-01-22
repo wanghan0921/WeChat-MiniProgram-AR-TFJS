@@ -10,9 +10,9 @@
                 <view class="weui-media-box weui-media-box_text">
                     <view class="weui-media-box__desc">基于face-api.js(TensorflowJS)的人脸特征识别demo.</view>
                     <view class="weui-media-box__info">
-                        <navigator url="/package_face_detecting/pages/camera/camera" class="marginTop10">
+                        <!-- <navigator url="/package_face_detecting/pages/camera/camera" class="marginTop10"> -->
                             <button class="weui-btn" type="primary">开启摄像头</button>
-                        </navigator>
+                        <!-- </navigator> -->
                     </view>
                 </view>
             </view>
@@ -22,8 +22,20 @@
                 <view class="weui-media-box weui-media-box_text">
                     <view class="weui-media-box__desc">基于科大讯飞AI-语音听写(流式版)WebAPI实现demo.</view>
                     <view class="weui-media-box__info">
-                        <navigator url="/package_recoder_detecting/pages/recorder/recorder" class="marginTop10">
+                        <!-- <navigator url="/package_recoder_detecting/pages/recorder/recorder" class="marginTop10"> -->
                             <button class="weui-btn" type="primary">开启录音</button>
+                        <!-- </navigator> -->
+                    </view>
+                </view>
+            </view>
+        </view>
+        <view class="weui-panel">
+            <view class="weui-panel__bd">
+                <view class="weui-media-box weui-media-box_text">
+                    <view class="weui-media-box__desc">基于opencv3.4的WebAssembly版本实现图片对比demo.</view>
+                    <view class="weui-media-box__info">
+                        <navigator url="/package_lesson2/index" class="marginTop10">
+                            <button class="weui-btn" type="primary">体验入口</button>
                         </navigator>
                     </view>
                 </view>
